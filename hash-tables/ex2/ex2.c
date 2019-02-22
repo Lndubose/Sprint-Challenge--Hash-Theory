@@ -12,18 +12,13 @@ char **reconstruct_trip(Ticket **tickets, int length)
   int num = 1;
 
   // YOUR CODE HERE
-  char *start;
   for (int i = 0; i < length; i++)
   {
-    if (strcmp(tickets[i]->source, "NONE") == 0)
-    {
-      start = strdup(tickets[i]->source);
-    }
     hash_table_insert(ht, tickets[i]->source, tickets[i]->destination);
   }
 
   // Find start area of trip
-  ret = hash_table_retrieve(ht, start);
+  ret = hash_table_retrieve(ht, "NONE");
   route[0] = strdup(ret);
 
   while (strcmp(ret, "NONE") != 0)
@@ -43,13 +38,11 @@ char **reconstruct_trip(Ticket **tickets, int length)
 
 void print_route(char **route, int length)
 {
-  printf("{\n");
   for (int i = 0; i < length; i++)
   {
     printf("%s\n", route[i]);
     free(route[i]);
   }
-  printf("}\n");
 
   free(route);
 }

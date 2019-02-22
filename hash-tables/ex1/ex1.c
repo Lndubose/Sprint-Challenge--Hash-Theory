@@ -11,11 +11,11 @@ Answer *get_indices_of_item_weights(int *weights, int length, int limit)
   // Loop through weights
   for (int i = 0; i < length; i++)
   {
-    // Get difference of wight and limit
+    // Get difference of limit and weight
     int diff = limit - weights[i];
     // Check if difference is in hash table
     int ret = hash_table_retrieve(ht, diff);
-    // if (hash_table_retrieve(ht, diff) > 0)
+    // if ret >= 0 index the answers
     if (ret >= 0)
     {
       // Check for the higher index
@@ -94,7 +94,6 @@ int main(void)
   print_answer(answer_4); // {6, 2}
 
   // Create a function to free the struct
-  destroy_answer(answer_1);
   destroy_answer(answer_2);
   destroy_answer(answer_3);
   destroy_answer(answer_4);
