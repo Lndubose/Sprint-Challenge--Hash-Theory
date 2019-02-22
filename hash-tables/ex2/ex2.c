@@ -8,20 +8,51 @@ char **reconstruct_trip(Ticket **tickets, int length)
 {
   HashTable *ht = create_hash_table(16);
   char **route = malloc(length * sizeof(char *));
+  char *ret;
+  int num = 1;
 
   // YOUR CODE HERE
+  char *start;
+  for (int i = 0; i < length; i++)
+  {
+    if (strcmp(tickets[i]->source, "NONE") == 0)
+    {
+      start = strdup(tickets[i]->source);
+    }
+    hash_table_insert(ht, tickets[i]->source, tickets[i]->destination);
+  }
 
+  // Find start area of trip
+  ret = hash_table_retrieve(ht, start);
+  route[0] = strdup(ret);
+
+  while (strcmp(ret, "NONE") != 0)
+  {
+    // new ret by using previous ret value
+    ret = hash_table_retrieve(ht, ret);
+    if (ret != NULL)
+    {
+      route[num] = strdup(ret);
+    }
+    num++;
+  }
+
+  destroy_hash_table(ht);
   return route;
 }
 
 void print_route(char **route, int length)
 {
-  for (int i = 0; i < length; i++) {
+  printf("{\n");
+  for (int i = 0; i < length; i++)
+  {
     printf("%s\n", route[i]);
+    free(route[i]);
   }
+  printf("}\n");
+
+  free(route);
 }
-
-
 
 #ifndef TESTING
 int main(void)
