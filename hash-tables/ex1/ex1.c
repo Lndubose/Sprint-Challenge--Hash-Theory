@@ -5,19 +5,67 @@
 
 Answer *get_indices_of_item_weights(int *weights, int length, int limit)
 {
+  Answer *answer = malloc(sizeof(Answer));
   HashTable *ht = create_hash_table(16);
-
   // YOUR CODE HERE
+  // Loop through weights
+  for (int i = 0; i < length; i++)
+  {
+    // Get difference of wight and limit
+    int diff = limit - weights[i];
+    // Check if difference is in hash table
+    int ret = hash_table_retrieve(ht, diff);
+    // if (hash_table_retrieve(ht, diff) > 0)
+    if (ret >= 0)
+    {
+      // Check for the higher index
+      if (ret > i)
+      {
+        answer->index_1 = ret;
+        answer->index_2 = i;
+      }
+      else
+      {
+        answer->index_1 = i;
+        answer->index_2 = ret;
+      }
+      break;
+    }
+    // Diff not in table, insert weight
+    hash_table_insert(ht, weights[i], i);
+  }
 
-  return NULL;
+  destroy_hash_table(ht);
+
+  if (answer->index_1)
+  {
+    return answer;
+  }
+  else
+  {
+    free(answer);
+    return NULL;
+  }
 }
 
 void print_answer(Answer *answer)
 {
-  if (answer != NULL) {
+  if (answer != NULL)
+  {
     printf("%d %d\n", answer->index_1, answer->index_2);
-  } else {
+  }
+  else
+  {
     printf("NULL\n");
+  }
+}
+
+//  Created function to destroy the Answer struct when done
+void destroy_answer(Answer *answer)
+{
+  if (answer != NULL)
+  {
+    free(answer);
   }
 }
 
@@ -28,22 +76,28 @@ int main(void)
   // TEST 1
   int weights_1 = {9};
   Answer *answer_1 = get_indices_of_item_weights(&weights_1, 1, 9);
-  print_answer(answer_1);  // NULL
+  print_answer(answer_1); // NULL
 
   // TEST 2
   int weights_2[] = {4, 4};
-  Answer* answer_2 = get_indices_of_item_weights(weights_2, 2, 8);
-  print_answer(answer_2);  // {1, 0}
+  Answer *answer_2 = get_indices_of_item_weights(weights_2, 2, 8);
+  print_answer(answer_2); // {1, 0}
 
   // TEST 3
   int weights_3[] = {4, 6, 10, 15, 16};
-  Answer* answer_3 = get_indices_of_item_weights(weights_3, 5, 21);
-  print_answer(answer_3);  // {3, 1}
+  Answer *answer_3 = get_indices_of_item_weights(weights_3, 5, 21);
+  print_answer(answer_3); // {3, 1}
 
   // TEST 4
   int weights_4[] = {12, 6, 7, 14, 19, 3, 0, 25, 40};
-  Answer* answer_4 = get_indices_of_item_weights(weights_4, 9, 7);
-  print_answer(answer_4);  // {6, 2}
+  Answer *answer_4 = get_indices_of_item_weights(weights_4, 9, 7);
+  print_answer(answer_4); // {6, 2}
+
+  // Create a function to free the struct
+  destroy_answer(answer_1);
+  destroy_answer(answer_2);
+  destroy_answer(answer_3);
+  destroy_answer(answer_4);
 
   return 0;
 }
